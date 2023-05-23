@@ -1,6 +1,6 @@
-{{- if .Values.websocket.issuer_enabled }}
+{{- if .Values.websocket.cluster_issuer_enabled }}
 apiVersion: cert-manager.io/v1
-kind: Issuer
+kind: ClusterIssuer
 metadata:
   name: {{ include "upterm.fullname" . }}-letsencrypt
   labels:
@@ -8,6 +8,9 @@ metadata:
 spec:
  acme:
    # The ACME server URL
+   {{ if .Values.websocket.stage_enabled }}
+   server: https://acme-staging-v02.api.letsencrypt.org/directory
+   {{ else }}
    server: https://acme-v02.api.letsencrypt.org/directory
    # Email address used for ACME registration
    email: {{ .Values.websocket.cert_manager_acme_email }}
@@ -16,7 +19,15 @@ spec:
      name: {{ include "upterm.fullname" . }}-letsencrypt
    # Enable the HTTP-01 challenge provider
    solvers:
-   - http01:
-       ingress:
-         class: {{ .Values.websocket.ingress_nginx_ingress_class }}
+     - selector:
+         dnsZones:
+           {{- range $key, $val := .Values.websocket.dns_zones }}
+           {{- $key }}: {{ $val }}
+           {{- end }}
+
+           #- flickify.com
+       dns01:
+         route53:
+           region: {{ .Values.websocket.region }}
+           hostedZoneID: {{ .Values.websocket.hosted_zone_id }}
 {{- end }}

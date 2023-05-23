@@ -70,5 +70,15 @@ hostname: my-upterm-host
 # Require ingress-nginx & cert-manager
 websocket:
   enabled: false
+  issuer_enabled: false
+  cluster_issuer_enabled: false
+  stage_enabled: false
+  region: us-east-1
   cert_manager_acme_email: your_email
-  ingress_nginx_ingress_class: nginx
+  duration: "4320h"
+  issuer: your_cert_issuer
+  cluster_issuer: your_cluster_issuer
+  dns_zones: {}
+  ingress_class: nginx
+  http01_ingress_class: "nginx-public"
+  hosted_zone_id: your_zoneid
