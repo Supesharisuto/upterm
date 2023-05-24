@@ -1,7 +1,7 @@
 // +heroku goVersion 1.18
 // +heroku install ./cmd/uptermd/...
 
-module github.com/owenthereal/upterm
+module github.com/supesharisuto/upterm
 
 go 1.19
 
